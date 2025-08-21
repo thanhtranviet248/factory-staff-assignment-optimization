@@ -8,7 +8,7 @@ Given a factory with information:
   * Monday (6,4,3)
   * Tuesday (5,5,5)
   * Wednesday (6,4,4)
-  * Thurday (5,5,5)
+  * Thursday (5,5,5)
   * Friday (5,5,3)
   * Saturday (6,5,4)
   * Sunday (5,5,4).
