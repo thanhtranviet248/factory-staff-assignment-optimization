@@ -29,13 +29,13 @@ Question: As a production planner, how can we assign each labor to each day and 
 ### Parameters:
 - $d_{jk}$ is the labor demand in day j at shift k.
 
-### Decision variable
+### Decision variable:
 - $x_{ijk}$ is the binary decision variable on whether to assign labor i to day j at shift k, $x_{ijk} = \{0, 1\}$.
 
-### Objective function
+### Objective function:
 - Minimizing the total labor assigned: $\min \sum_{i=1}^{20} \sum_{j=1}^{7} \sum_{k=1}^{3} x_{ijk}$.
 
-### Constraints
+### Constraints:
 - For each shift k in each day j, the number of labor to be assigned must fulfil the demand: $\sum_{i=1}^{20} x_{ijk} = d_{jk}, \forall k \in K, \forall j \in J$.
 - For each labor i in each day j, the maximum number of shift he/she can work is 1: $\sum_{k=1}^{3} x_{ijk} \leq 1, \forall i \in I, \forall j \in J$.
 - For each labor i, the maximum shift per week he/she can work is 5 (because a labor can only work 1 shift per day, the maximum days of work equal to the maximum shifts of work): $\sum_{j=1}^{7} \sum_{k=1}^{3} x_{ijk} \leq 5, \forall i \in I$.
