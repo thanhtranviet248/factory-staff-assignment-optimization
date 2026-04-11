@@ -23,10 +23,11 @@ Question: As a production planner, how can we assign each labor to each day and 
 ## Mathematical model
 ### Sets:
 - I is the set of the factory labor, $I = \{1, 2, 3, \dots, 20\}$.
-- J is the set of weekday, $J = \{{1, 2, 3, \dots, 7\}}$.
+- J is the set of weekday, $J = \{1, 2, 3, \dots, 7\}$.
 - K is the set of each shift in a day, $K = \{1, 2, 3\}$.
 
-### Parameters:
+### Parameters and indices:
+- $i$ is a specific labour, $i ∈ I$
 - $d_{jk}$ is the labor demand in day j at shift k.
 
 ### Decision variable:
