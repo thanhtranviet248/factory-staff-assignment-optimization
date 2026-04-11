@@ -28,10 +28,12 @@ Question: As a production planner, how can we assign each labor to each day and 
 
 ### Parameters and indices:
 - $i$ is a specific labour, $i ∈ I$
+- $j$ is a specific weekday, $j ∈ J$
+- $k$ is a specific shift, $k ∈ K$
 - $d_{jk}$ is the labor demand in day j at shift k.
 
 ### Decision variable:
-- $x_{ijk}$ is the binary decision variable on whether to assign labor i to day j at shift k, $x_{ijk} = \{0, 1\}$.
+- $x_{ijk}$ is the binary decision variable on whether to assign labor i to day j at shift k, $x_{ijk} = \{0, 1\} \forall i \in I, \forall j \in J,  \forall k \in K$.
 
 ### Objective function:
 - Minimizing the total labor assigned: $\min \sum_{i=1}^{20} \sum_{j=1}^{7} \sum_{k=1}^{3} x_{ijk}$.
