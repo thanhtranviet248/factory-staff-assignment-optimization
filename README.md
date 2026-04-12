@@ -6,13 +6,23 @@ This project implements a mixed-integer linear programming (MILP) model to optim
 
 We consider a factory operating 7 days per week with 3 shifts per day (morning, afternoon, evening). For each day–shift pair, a required number of workers is given (e.g., Monday: $(6,4,3)$; Tuesday: $(5,5,5)$; Wednesday: $(6,4,4)$; Thursday: $(5,5,5)$; Friday: $(5,5,3)$; Saturday: $(6,5,4)$; Sunday: $(5,5,4)$), and the total workforce size is 20 workers.
 
-Each worker is subject to the following rules: a worker can work at most one shift per day; each worker must have at least 2 leave days per week (i.e., at most 5 working days); and if a worker works the evening shift on day $j$, they are not allowed to work the morning shift on day $j+1$. The planning task is to assign workers to day–shift positions such that all daily shift demands are met and the total number of worker–shift assignments is minimized while complying with these labor constraints.
+Each worker is subject to the following rules: 
+
+- A worker can work at most one shift per day.
+- Each worker must have at least 2 leave days per week (i.e., at most 5 working days).
+- If a worker works the evening shift on day $j$, they are not allowed to work the morning shift on day $j+1$.
+- The planning task is to assign workers to day–shift positions such that all daily shift demands are met and the total number of worker–shift assignments is minimized while complying with these labor constraints.
 
 ## 2. Mathematical formulation
 
 ### 2.1 Sets and indices
 
-We define the following sets. The set of workers is $I = \{1,2,\dots,20\}$. The set of days in the planning horizon is $J = \{1,2,\dots,7\}$. The set of shifts per day is $K = \{1,2,3\}$ (for example, $1$ = morning, $2$ = afternoon, $3$ = evening). Indices $i \in I$, $j \in J$, and $k \in K$ denote, respectively, a worker, a day, and a shift.
+We define the following sets:
+
+- The set of workers is $I = \{1,2,\dots,20\}$.
+- The set of days in the planning horizon is $J = \{1,2,\dots,7\}$.
+- The set of shifts per day is $K = \{1,2,3\}$ (for example, $1$ = morning, $2$ = afternoon, $3$ = evening).
+- Indices $i \in I$, $j \in J$, and $k \in K$ denote, respectively, a worker, a day, and a shift.
 
 ### 2.2 Parameters
 
@@ -24,7 +34,8 @@ The binary decision variable $x_{ijk}$ indicates whether worker $i$ is assigned 
 
 ### 2.4 Objective function
 
-The objective is to minimize the total number of worker–shift assignments over the planning horizon, given by $ \min \sum_{i \in I} \sum_{j \in J} \sum_{k \in K} x_{ijk} $.
+The objective is to minimize the total number of worker–shift assignments over the planning horizon, given by \$\min \sum_{i \in I} \sum_{j \in J} \sum_{k \in K} x_{ijk}.$
+
 
 ### 2.5 Constraints
 
