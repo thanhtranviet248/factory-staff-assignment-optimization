@@ -44,4 +44,5 @@ The model includes the following types of constraints:
 - Demand satisfaction requires that, for each day–shift pair $(j,k)$, the number of assigned workers equals the required demand, i.e. $\sum_{i \in I} x_{ijk} = d_{jk} \text{ for all } j \in J, k \in K.$
 - Daily workload constraints ensure that each worker can work at most one shift per day, i.e. $\sum_{k \in K} x_{ijk} \le 1 \text{ for all } i \in I, j \in J.$
 - Weekly workload constraints limit each worker to at most 5 working days per week, which in this setting is equivalent to $\sum_{j \in J} \sum_{k \in K} x_{ijk} \le 5 \text{ for all } i \in I.$
-- Rest-period constraints prohibit an evening-to-morning consecutive shift for the same worker, enforced by $x_{ij3} + x_{i(j+1)1} \le 1 \text{ for all } i \in I, j \in \{1,2,3,4,5,6\}.$ - Integrality conditions require $x_{ijk} \in \{0,1\} \text{ for all } i \in I, j \in J, k \in K.$
+- Rest-period constraints prohibit an evening-to-morning consecutive shift for the same worker, enforced by $x_{ij3} + x_{i(j+1)1} \le 1 \text{ for all } i \in I, j \in \{1,2,3,4,5,6\}.$
+- Integrality conditions require $x_{ijk} \in \{0,1\} \text{ for all } i \in I, j \in J, k \in K.$
