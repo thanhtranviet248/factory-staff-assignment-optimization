@@ -1,48 +1,67 @@
 # Factory Staff Assignment Optimization
-My practice on operations research where I use Gurobi solver on Python environment to optimize the staff assignment for a factory.
 
-## Conceptual model
-Given a factory with information:
-- The factory produces 7 days a week with 3 shifts a day: morning, afternoon and evening.
-- The factory has the production plan for next week with estimated the workforce daily workforce requirement:
-  * Monday (6,4,3)
-  * Tuesday (5,5,5)
-  * Wednesday (6,4,4)
-  * Thursday (5,5,5)
-  * Friday (5,5,3)
-  * Saturday (6,5,4)
-  * Sunday (5,5,4)
-- The total workforce is 20 people.
-- According to the labor rights:
-  * A labor can only work 1 shift a day.
-  * Each week, a labor must take leave at least 2 days.
-  * If a labor works on evening shift today, he/she cannot work on the morning shift tomorrow.
+This project implements a mixed-integer linear programming (MILP) model to optimize weekly staff assignment in a three-shift manufacturing environment using Gurobi in Python. The model assigns workers to days and shifts such that daily shift-specific labor demands are satisfied while respecting individual working-time regulations and minimizing total labor utilization.
 
-Question: As a production planner, how can we assign each labor to each day and each shift to minimize the total labor usage and satisfy the demand while still complying to the rights?
+## 1. Problem description
 
-## Mathematical model
-### Sets:
-- I is the set of the factory labor, $I = \{1, 2, 3, \dots, 20\}$.
-- J is the set of weekday, $J = \{1, 2, 3, \dots, 7\}$.
-- K is the set of each shift in a day, $K = \{1, 2, 3\}$.
+We consider a factory operating 7 days per week with 3 shifts per day (morning, afternoon, evening). For each day–shift pair, a required number of workers is given (e.g., Monday: $(6,4,3)$; Tuesday: $(5,5,5)$; …; Sunday: $(5,5,4)$), and the total workforce size is 20 workers.
 
-### Parameters and indices:
-- $i$ is a specific labour, $i ∈ I$
-- $j$ is a specific weekday, $j ∈ J$
-- $k$ is a specific shift, $k ∈ K$
-- $d_{jk}$ is the labor demand in day j at shift k.
+Each worker is subject to the following constraints: (i) a worker can work at most one shift per day; (ii) each worker must have at least 2 leave days per week (i.e., at most 5 working days); (iii) if a worker works the evening shift on day $j$, they are not allowed to work the morning shift on day $j+1$. The planning task is to assign workers to day–shift positions such that all daily shift demands are met and the total number of worker–shift assignments is minimized, while complying with these labor rules.
 
-### Decision variable:
-- $x_{ijk}$ is the binary decision variable on whether to assign labor i to day j at shift k, $x_{ijk} = \{0, 1\} \forall i \in I, \forall j \in J, \forall k \in K$.
+## 2. Mathematical formulation
 
-### Objective function:
-- Minimizing the total labor assigned: $\min \sum_{i=1}^{20} \sum_{j=1}^{7} \sum_{k=1}^{3} x_{ijk}$.
+### Sets
 
-### Constraints:
-- For each shift k in each day j, the number of labor to be assigned must fulfil the demand: $\sum_{i=1}^{20} x_{ijk} = d_{jk}, \forall j \in J, \forall k \in K$.
-- For each labor i in each day j, the maximum number of shift he/she can work is 1: $\sum_{k=1}^{3} x_{ijk} \leq 1, \forall i \in I, \forall j \in J$.
-- For each labor i, the maximum shift per week he/she can work is 5 (because a labor can only work 1 shift per day, the maximum days of work equal to the maximum shifts of work): $\sum_{j=1}^{7} \sum_{k=1}^{3} x_{ijk} \leq 5, \forall i \in I$.
-- For each labor i in each 2 days j and j+1, if he/she works on evening shift (k = 3) today, he/she cannot work on the 
-morning shift (k = 1) tomorrow:: $x_{ij3} + x_{i(j+1)1} = 1, \forall i \in I, \forall j \in \{1, 2, 3, 4, 5, 6}$.
+- $I$ is the set of workers, $I = \{1, 2, 3, \dots, 20\}$.
+- $J$ is the set of days in the planning horizon, $J = \{1, 2, 3, \dots, 7\}$.
+- $K$ is the set of shifts in a day, $K = \{1, 2, 3\}$ (e.g., 1 = morning, 2 = afternoon, 3 = evening).
 
+### Indices and parameters
 
+- $i \in I$ indexes workers.
+- $j \in J$ indexes days.
+- $k \in K$ indexes shifts.
+- $d_{jk}$ is the required number of workers on day $j$ in shift $k$.
+
+### Decision variable
+
+- $x_{ijk}$ is a binary variable indicating whether worker $i$ is assigned to day $j$ in shift $k$, i.e. $x_{ijk} \in \{0,1\}$ for all $i \in I$, $j \in J$, $k \in K$.
+
+### Objective function
+
+Minimize the total number of worker–shift assignments over the planning horizon:
+\[
+\min \sum_{i \in I} \sum_{j \in J} \sum_{k \in K} x_{ijk}.
+\]
+
+### Constraints
+
+1. **Demand satisfaction:** For each day–shift pair $(j,k)$, the number of assigned workers must match the required demand:
+\[
+\sum_{i \in I} x_{ijk} = d_{jk}
+\quad \forall j \in J, k \in K.
+\]
+
+2. **At most one shift per day per worker:** Each worker can work at most one shift per day:
+\[
+\sum_{k \in K} x_{ijk} \le 1
+\quad \forall i \in I, j \in J.
+\]
+
+3. **Maximum five working days per week:** Since a worker can work at most one shift per day, limiting them to at most 5 shifts per week enforces at least 2 leave days:
+\[
+\sum_{j \in J} \sum_{k \in K} x_{ijk} \le 5
+\quad \forall i \in I.
+\]
+
+4. **No evening-to-morning consecutive shift:** If a worker $i$ works the evening shift (shift 3) on day $j$, they cannot work the morning shift (shift 1) on day $j+1$:
+\[
+x_{ij3} + x_{i(j+1)1} \le 1
+\quad \forall i \in I, \forall j \in \{1, 2, 3, 4, 5, 6\}.
+\]
+
+5. **Integrality:** All decision variables are binary:
+\[
+x_{ijk} \in \{0,1\}
+\quad \forall i \in I, j \in J, k \in K.
+\]
